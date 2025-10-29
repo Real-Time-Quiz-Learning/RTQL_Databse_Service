@@ -6,6 +6,7 @@ create table user (
     id          int             not null auto_increment,
     fname       varchar(50)     not null,
     lname       varchar(50)     not null,
+    email       varchar(50)     not null,
 
     primary key id
 );
@@ -20,7 +21,11 @@ create table student (
 
 create table questions (
     id          int             not null auto_increment,
+    poster      int             not null,
+    text        varchar(255),
 
+    primary key id,
+    foreign key poster references user.id
 );
 
 create table responses (
