@@ -11,18 +11,17 @@ create table user (
     primary key id
 );
 
-create table teacher (
+-- create table teacher (
+-- );
 
-);
-
-create table student (
-
-);
+-- create table student (
+-- );
 
 create table questions (
     id          int             not null auto_increment,
     poster      int             not null,
-    text        varchar(255),
+    text        varchar(255)    not null,
+    time        int             not null
 
     primary key id,
     foreign key poster references user.id
@@ -31,7 +30,7 @@ create table questions (
 create table responses (
     id          int             not null auto_increment,
     responder   int             not null,
-    text        varchar(255),
+    text        varchar(255)    not null,
 
     primary key id
     foreign key responder references user.id
