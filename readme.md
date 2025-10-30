@@ -1,4 +1,4 @@
-# Setup
+# Setup (not finished yet)
 
 1. Install mysql
 

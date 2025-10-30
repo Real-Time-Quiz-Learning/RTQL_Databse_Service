@@ -7,7 +7,9 @@ create table user (
     fname       varchar(50)     not null,
     lname       varchar(50)     not null,
     email       varchar(50)     not null,
+    pass        varchar(50)     not null,
 
+    constraint unique_user unique (fname, lname, email),
     primary key (id)
 );
 
@@ -24,17 +26,16 @@ create table question (
     qtime       int             not null,
 
     primary key (id),
-    foreign key (pid) references user (id)
+    foreign key (pid) references user (id) on delete cascade
 );
 
 create table response (
     id          int             not null auto_increment,
-    usid        int             not null,
     qid         int             not null,
+    snick       varchar(50)     not null,
     rtext       varchar(255)    not null,
 
     primary key (id),
-    foreign key (usid) references user (id),
-    foreign key (qid)  references question (id)
+    foreign key (qid)  references question (id) on delete cascade
 );
 

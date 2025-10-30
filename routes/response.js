@@ -43,14 +43,6 @@ router.route('/:id')
             user: req.user,
             data: []
         });
-    })
-    .delete((req, res) => {
-        console.log(req.response);
-
-        res.json({
-            message: 'Something is being deleted.',
-            user: req.user
-        });
     });
 
 router

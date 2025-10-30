@@ -53,14 +53,24 @@ class Server {
     }
 
     start() {
-        // Middleware
         this.app.use(this.exposeServiceMiddleware);
 
-        // Routes
         this.app.use('/question', QuestionRouter);
         this.app.use('/response', ResponseRouter);
         this.app.use('/user', UserRouter);
         
+        this.app.use((err, req, res, next) => {
+            console.log(err);
+
+            const statusCode = err.statusCode || 500;
+
+            res.status(statusCode);
+            res.json({
+                status: 'Error',
+                message: err.message || 'Database is in big bad error state'
+            });
+        });
+
         this.app.listen(this.port, () => {
             console.log(`Server listening on port: ${this.port}`);
         });
