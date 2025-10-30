@@ -29,12 +29,12 @@ create table question (
 
 create table response (
     id          int             not null auto_increment,
-    rid         int             not null,
+    usid        int             not null,
     qid         int             not null,
-    qtext       varchar(255)    not null,
+    rtext       varchar(255)    not null,
 
     primary key (id),
-    foreign key (rid) references user (id),
+    foreign key (usid) references user (id),
     foreign key (qid)  references question (id)
 );
 

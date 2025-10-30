@@ -7,6 +7,7 @@ import { DbService } from './services/dbService.js';
 
 import QuestionRouter from './routes/question.js';
 import ResponseRouter from './routes/response.js';
+import UserRouter from './routes/user.js';
 
 /**
  * TODO
@@ -32,7 +33,13 @@ class Server {
         this.app                = express();
         this.jsonParser         = express.json();
         this.urlEncodedParser   = express.urlencoded();
-        this.dbService          = new DbService();
+        this.dbService          = new DbService(
+            null,
+            process.env.MSQL_HOST,
+            process.env.MSQL_DB,
+            process.env.MSQL_USER,
+            process.env.MSQL_PASSWORD
+        );
 
         this.exposedServices = Object.freeze({
             dbService: this.dbService
@@ -52,6 +59,7 @@ class Server {
         // Routes
         this.app.use('/question', QuestionRouter);
         this.app.use('/response', ResponseRouter);
+        this.app.use('/user', UserRouter);
         
         this.app.listen(this.port, () => {
             console.log(`Server listening on port: ${this.port}`);

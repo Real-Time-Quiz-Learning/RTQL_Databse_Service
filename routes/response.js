@@ -4,8 +4,7 @@ const router = express.Router();
 
 router.use(express.json());
 
-router
-    .route('/')
+router.route('/')
     .get(async (req, res) => {
         const db    = req.services.dbService;
         const data  = await db.getResponse();
@@ -17,16 +16,16 @@ router
     })
     .post((req, res) => {
         const data  = req.body;
-        const dbd   = req.services.dbService;
-        // const res   = await db.insertResponse(data);
+        const db    = req.services.dbService;
+
+        console.log(data);
 
         res.json({
             message: 'Success post for incoming data'
         })
     });
 
-router
-    .route('/:id')
+router.route('/:id')
     .get((req, res) => {
         console.log(req.response);
 

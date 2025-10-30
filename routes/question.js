@@ -4,15 +4,16 @@ const router = express.Router();
 
 router.use(express.json());
 
-router
-    .get('/:id', (req, res) => {
-
+router.route('/')
+    .get((req, res) => {
     })
-    .put('/:id', (req, res) => {
-
-    })
-    .post('/', (req, res) => {
-
+    .post((req, res) => {
     });
+
+router.route('/:id')
+    .get((req, res) => {
+    })
+    .put((req, res) => {
+    })
 
 export default router;
