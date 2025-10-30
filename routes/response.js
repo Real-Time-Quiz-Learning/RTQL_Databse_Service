@@ -6,18 +6,19 @@ router.use(express.json());
 
 router
     .route('/')
-    .get((req, res) => {
-        console.log(req.services.dbService);
+    .get(async (req, res) => {
+        const db    = req.services.dbService;
+        const data  = await db.getResponse();
 
         res.json({
             message: 'Success',
-            data: []
+            data: data
         });
     })
     .post((req, res) => {
-        const data = req.body;
-        
-        console.log(data);
+        const data  = req.body;
+        const dbd   = req.services.dbService;
+        // const res   = await db.insertResponse(data);
 
         res.json({
             message: 'Success post for incoming data'
@@ -27,6 +28,8 @@ router
 router
     .route('/:id')
     .get((req, res) => {
+        console.log(req.response);
+
         res.json({
             message: `Success get for id ${req.params.id}`,
             user: req.user,
@@ -34,6 +37,8 @@ router
         })
     })
     .put((req, res) => {
+        console.log(req.response);
+
         res.json({
             message: `Success put for id ${req.params.id}`,
             user: req.user,
@@ -41,6 +46,8 @@ router
         });
     })
     .delete((req, res) => {
+        console.log(req.response);
+
         res.json({
             message: 'Something is being deleted.',
             user: req.user
@@ -48,8 +55,8 @@ router
     });
 
 router
-    .param('id', (req, res, next, id) => {
-        req.user = 'Sally';
+    .param('id', async (req, res, next, id) => {
+        req.response = await req.services.dbService.getResponse(id);
         next(); 
     });
 

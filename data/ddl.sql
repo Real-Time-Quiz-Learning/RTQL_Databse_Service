@@ -1,6 +1,6 @@
-create database compproject;
+create database rtql;
 
-use compproject;
+use rtql;
 
 create table user (
     id          int             not null auto_increment,
@@ -8,7 +8,7 @@ create table user (
     lname       varchar(50)     not null,
     email       varchar(50)     not null,
 
-    primary key id
+    primary key (id)
 );
 
 -- create table teacher (
@@ -17,22 +17,24 @@ create table user (
 -- create table student (
 -- );
 
-create table questions (
+create table question (
     id          int             not null auto_increment,
-    poster      int             not null,
-    text        varchar(255)    not null,
-    time        int             not null
+    pid         int             not null,
+    qtext       varchar(255)    not null,
+    qtime       int             not null,
 
-    primary key id,
-    foreign key poster references user.id
+    primary key (id),
+    foreign key (pid) references user (id)
 );
 
-create table responses (
+create table response (
     id          int             not null auto_increment,
-    responder   int             not null,
-    text        varchar(255)    not null,
+    rid         int             not null,
+    qid         int             not null,
+    qtext       varchar(255)    not null,
 
-    primary key id
-    foreign key responder references user.id
+    primary key (id),
+    foreign key (rid) references user (id),
+    foreign key (qid)  references question (id)
 );
 
