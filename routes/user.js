@@ -48,7 +48,7 @@ router.route('/:id')
             res.status(200);
             res.json({
                 message: `Successfully found user for id \'${req.params.id}\'`,
-                user: user
+                data: user
             });
         }
     })

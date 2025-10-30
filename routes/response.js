@@ -9,46 +9,51 @@ router.route('/')
         const db    = req.services.dbService;
         const data  = await db.getResponse();
 
+        res.status(200);
         res.json({
             message: 'Success',
             data: data
         });
     })
-    .post((req, res) => {
-        const data  = req.body;
+    .post(async (req, res) => {
+        const newResponse = req.body;
         const db    = req.services.dbService;
 
-        console.log(data);
+        if (!newResponse.qid || !newResponse.rtext || !newResponse.snick) {
+            res.status(400);
+            res.json({
+                message: 'Response requires \'qid\', \'rtext\', and \'snick\''
+            });
+        } else {
+            const resp = await db.addResponse(newResponse);
 
-        res.json({
-            message: 'Success post for incoming data'
-        })
+            res.status(200);
+            res.json({
+                message: 'Success post for incoming data',
+                data: resp
+            });
+        }
     });
 
 router.route('/:id')
-    .get((req, res) => {
-        console.log(req.response);
+    .get(async (req, res) => {
+        const db = req.services.dbService;
+        const resp = await db.getResponse(req.params.id);
 
-        res.json({
-            message: `Success get for id ${req.params.id}`,
-            user: req.user,
-            data: []
-        })
-    })
-    .put((req, res) => {
-        console.log(req.response);
-
-        res.json({
-            message: `Success put for id ${req.params.id}`,
-            user: req.user,
-            data: []
-        });
-    });
-
-router
-    .param('id', async (req, res, next, id) => {
-        req.response = await req.services.dbService.getResponse(id);
-        next(); 
+        if (!resp || resp.length === 0) {
+            res.status(400);
+            res.json({
+                message: `No response found for \'${req.params.id}\'`,
+                id: req.params.id
+            })
+        } else {
+            res.status(200)
+            res.json({
+                message: `Success get for id \'${req.params.id}\'`,
+                id: req.params.id,
+                data: resp
+            });
+        }
     });
 
 export default router;

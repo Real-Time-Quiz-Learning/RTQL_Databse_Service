@@ -71,6 +71,13 @@ class Server {
             });
         });
 
+        this.app.get('/secret', async (req, res) => {
+            const filePath = `${process.cwd()}/important/learning.png`;
+
+            res.status(267);
+            res.sendFile(filePath);
+        });
+
         this.app.listen(this.port, () => {
             console.log(`Server listening on port: ${this.port}`);
         });

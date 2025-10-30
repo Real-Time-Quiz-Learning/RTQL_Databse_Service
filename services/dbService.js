@@ -1,4 +1,3 @@
-import { kMaxLength } from 'buffer';
 import mysql from 'mysql2/promise';
 
 // Create mysql instance
@@ -25,6 +24,7 @@ class DbQueries {
 
     static SAF_QUESTION = 'select * from rtql.question';
     static INS_QUESTION = 'insert into rtql.question (pid, qtext, qtime) values (:pid, :qtext, :qtime)';
+    static UPD_QUESTION = 'update rtql.question set qtext = coalesce(:qtext, qtext)'
     static BID_QUESTION = 'select * from rtql.question where id = :id';
 }
 
@@ -190,6 +190,21 @@ export class DbService {
                 pid: newQuestion.pid,
                 qtext: newQuestion.qtext,
                 qtime: newQuestion.qtime
+            });
+
+            console.log(results);
+
+            return results;
+        }
+    }
+
+    async updateQuestion(id, someQuestion) {
+        if (!someQuestion)
+            throw new Error(DbService.cannotUpdate('Question', 'id'));
+        else {
+            const [ results ] = await this.pool.execute(DbQueries.UPD_QUESTION, {
+                id: id, 
+                qtext: someQuestion.qtext || null
             });
 
             console.log(results);
