@@ -15,7 +15,7 @@ export class DbService {
 
     static safUser      = 'select * from rtql.user';
     static safResponse  = 'select * from rtql.response';
-    static safQuestion  = 'select * from rtql.question'
+    static safQuestion  = 'select * from rtql.question';
 
     static cannotUpdate = (table, param) => `Cannot update without ${table} ${param}`;
 

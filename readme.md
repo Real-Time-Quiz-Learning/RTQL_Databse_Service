@@ -15,3 +15,5 @@ sudo apt install mysql.server
 
 ```bash
 ```
+
+3. Rest is implied (I forgot for now I will 'remember' when it comes time to actually setup the proper machine).
