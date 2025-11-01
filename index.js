@@ -42,8 +42,9 @@ class Server {
         );
 
         this.exposedServices = Object.freeze({
-            dbService: this.dbService
+            dbService: this.dbService,
         });
+
         this.exposeServiceMiddleware = this.exposeServices.bind(this);
     }
 
