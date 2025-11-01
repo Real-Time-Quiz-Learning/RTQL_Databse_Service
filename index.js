@@ -59,6 +59,7 @@ class Server {
     start() {
         this.app.use(this.exposeServiceMiddleware);
 
+        this.app.use(express.static(`${process.cwd()}/public`));
         this.app.use('/question', QuestionRouter);
         this.app.use('/response', ResponseRouter);
         this.app.use('/user', UserRouter);
@@ -67,19 +68,11 @@ class Server {
             console.log(err);
 
             const statusCode = err.statusCode || 500;
-
             res.status(statusCode);
             res.json({
                 status: 'Error',
                 message: err.message || 'Database is in big bad error state'
             });
-        });
-
-        this.app.get('/secret', async (req, res) => {
-            const filePath = `${process.cwd()}/important/learning.png`;
-
-            res.status(267);
-            res.sendFile(filePath);
         });
 
         this.app.listen(this.port, () => {
