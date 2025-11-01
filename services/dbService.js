@@ -103,12 +103,7 @@ export class DbService {
         try {
             const [ results ] = await this.pool.execute(qstring, qparams);
             console.log(results);
-            if (!results.ResultSetHeader && results.length === 0) {
-                console.log('Big bad');
-                throw new Error('Empty result set');
-            } else {
-                return new DbRes(DbResStatus.SUCCESS, results);
-            }
+            return new DbRes(DbResStatus.SUCCESS, results);
         } catch (err) {
             return new DbRes(DbResStatus.ERROR, undefined, err.message);
         }

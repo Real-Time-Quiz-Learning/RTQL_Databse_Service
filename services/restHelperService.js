@@ -7,8 +7,8 @@ export class RestHelper {
     }
 
     send(res, dbRes, message, status = null) {
-        console.log(dbRes);
-        console.log(dbRes.status);
+        // console.log(dbRes);
+        // console.log(dbRes.status);
         res.status(status || this.statusFromDbRes(dbRes));
         message.response = dbRes;
         res.json(message);
