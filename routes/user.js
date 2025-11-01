@@ -8,87 +8,59 @@ router.use(express.json());
 router.route('/')
     .get(async (req, res) => {
         const db    = req.services.dbService;
-        const users = await db.getUser(); 
+        const rh    = req.services.restHelper;
+        const dbRes = await db.getUser(); 
 
-        res.status(200);
-        res.json({
-            message: 'Successfully got all users in the database.',
-            data: users
+        rh.send(res, dbRes, {
+            message: ServerStrings.GET_ALL_USERS
         });
     })
     .post(async (req, res) => {
-        const db = req.services.dbService;
-        const newUser = req.body;
+        const db        = req.services.dbService;
+        const rh        = req.services.restHelper;
+        const user      = req.body;
+        const dbRes     = await db.addUser(user);        // Probably should do something with this
 
-        if (!newUser.fname || !newUser.lname  || !newUser.email || !newUser.pass) {
-            res.status(400);
-            res.send({
-                message: ServerStrings.DB_MISSING_PARAMS('user'),
-                missingParams: db.expectedUser
-            });
-        } else {
-            const dbRes = await db.addUser(newUser);        // Probably should do something with this
-            res.status(200);
-            res.json({
-                message: ServerStrings.DB_QUERY_SUCCESS,
-                data: dbRes
-            });
-        }
+        rh.send(res, dbRes, {
+            message: ServerStrings.ADD_NEW_USER
+        });
     });
 
 router.route('/:id')
     .get(async (req, res) => {
-        const db    = req.services.dbService;
-        const user  = await db.getUser(req.params.id);
-        
-        if (!user || user.length === 0) {
-            res.status(400);
-            res.json({
-                message: `No user could be found for id \'${req.params.id}\'`
-            });
+        const db        = req.services.dbService;
+        const rh        = req.services.restHelper;
+        const dbRes     = await db.getUser(req.params.id);
 
-        } else {
-            res.status(200);
-            res.json({
-                message: `Successfully found user for id \'${req.params.id}\'`,
-                data: user
-            });
-        }
+        rh.send(res, dbRes, {
+            message: ServerStrings.GET_USER_BY_ID
+        });
     })
     .put(async (req, res) => {
-        if (!req.params.id) {
-            res.status(400);
-            res.json({
-                message: ServerStrings.DB_MISSING_ID,
-                id: req.params.id
-            });
-        } else if (!userData) {
-            res.status(400);
-            res.json({
-                message: ServerStrings.DB_NOTHING_UPDATE,
-                id: req.params.id
-            });
-        } else {
-            console.log(userData);
+        const rh = req.services.restHelper;
+        const user = req.body;
 
-            const resp = await db.updateUser(req.params.id, userData);
-            
-            res.status(200);
-            res.json({
-                message: ServerStrings.DB_UPDATE_SUCCESS,
-                id: req.params.id,
-                data: resp
+        if (!req.params.id) {
+            rh.send(res, undefined, {
+                message: ServerStrings.UPDATE_USER_BY_ID
+            }, 400);
+
+        } else {
+            const db = req.services.dbService;
+            const dbRes = await db.updateUser(req.params.id, user);
+
+            rh.send(res, dbRes, {
+                message: ServerStrings.UPDATE_USER_BY_ID
             });
         }
     })
     .delete(async (req, res) => {
         const db = req.services.dbService;
-        const resp = db.deleteUser(req.params.id);
+        const rh = req.services.restHelper;
+        const dbRes = await db.deleteUser(req.params.id);
 
-        res.status(200);
-        res.json({
-            message: `Successfully deleted user with id \'${req.params.id}\'`,
-            data: resp
+        rh.send(res, dbRes, {
+            message: ServerStrings.DELETE_USER_BY_ID
         });
     });
 

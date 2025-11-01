@@ -4,6 +4,7 @@ import cors     from 'cors';
 import fs       from 'fs/promises';
 
 import { DbService } from './services/dbService.js';
+import { RestHelper } from './services/restHelperService.js';
 
 import QuestionRouter from './routes/question.js';
 import ResponseRouter from './routes/response.js';
@@ -40,11 +41,13 @@ class Server {
             process.env.MSQL_USER,
             process.env.MSQL_PASSWORD
         );
+        this.restHelper = new RestHelper();
 
+        // Expose services via middleware
         this.exposedServices = Object.freeze({
             dbService: this.dbService,
+            restHelper: this.restHelper
         });
-
         this.exposeServiceMiddleware = this.exposeServices.bind(this);
     }
 
