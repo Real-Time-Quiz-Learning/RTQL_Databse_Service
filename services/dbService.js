@@ -34,7 +34,7 @@ export class DbResStatus {
 }
 
 export class DbRes {
-    constructor(status, data = null, error = null) {
+    constructor(status, data, error) {
         this.status = status;
         this.data = data;
         this.error = error;
@@ -105,7 +105,7 @@ export class DbService {
             console.log(results);
             return new DbRes(DbResStatus.SUCCESS, results);
         } catch (err) {
-            return new DbRes(DbResStatus.ERROR, null, err);
+            return new DbRes(DbResStatus.ERROR, undefined, err);
         }
     }
 
@@ -125,7 +125,7 @@ export class DbService {
 
     async addUser(newUser) {
         if (!newUser) {
-            return new DbRes(DbResStatus.ERROR, null, DB_NOTHING_UPDATE);
+            return new DbRes(DbResStatus.ERROR, undefined, DB_NOTHING_UPDATE);
         } else {
             const results = await this.executeQuery(DbQueries.INS_USER, {
                 fname: newUser.fname,
@@ -139,7 +139,7 @@ export class DbService {
 
     async updateUser(id, someUser) {
         if (!someUser)
-            return new DbRes(DbResStatus.ERROR, null, DB_NOTHING_UPDATE);
+            return new DbRes(DbResStatus.ERROR, undefined, DB_NOTHING_UPDATE);
         else {
             const results = await this.executeQuery(DbQueries.UPD_USER, {
                 id: id,
@@ -154,7 +154,7 @@ export class DbService {
 
     async deleteUser(id) {
         if (!id)
-            return new DbRes(DbResStatus.ERROR, null, DB_MISSING_ID);
+            return new DbRes(DbResStatus.ERROR, undefined, DB_MISSING_ID);
         else {
             const results = await this.executeQuery(DbQueries.DEL_USER, {
                 id: id
@@ -206,7 +206,7 @@ export class DbService {
 
     async addQuestion(newQuestion) {
         if (!newQuestion)
-            return new DbRes(DbResStatus.ERROR, null, DB_NOTHING_UPDATE);
+            return new DbRes(DbResStatus.ERROR, undefined, DB_NOTHING_UPDATE);
         else {
             const results = await this.executeQuery(DbQueries.INS_QUESTION, {
                 pid: newQuestion.pid,
@@ -219,7 +219,7 @@ export class DbService {
 
     async updateQuestion(id, someQuestion) {
         if (!someQuestion)
-            return new DbRes(DbResStatus.ERROR, null, DB_NOTHING_UPDATE)
+            return new DbRes(DbResStatus.ERROR, undefined, DB_NOTHING_UPDATE)
         else {
             const results = await this.executeQuery(DbQueries.UPD_QUESTION, {
                 id: id, 
