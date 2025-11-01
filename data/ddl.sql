@@ -7,9 +7,9 @@ create table user (
     fname       varchar(50)     not null,
     lname       varchar(50)     not null,
     email       varchar(50)     not null,
-    pass        varchar(50)     not null,
+    pass        varchar(60)     not null,
 
-    constraint unique_user unique (fname, lname, email),
+    constraint unique_user_email unique (email),
     primary key (id)
 );
 
