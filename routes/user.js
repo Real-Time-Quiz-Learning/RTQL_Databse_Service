@@ -33,26 +33,20 @@ router.route('/:id')
         const dbRes     = await db.getUser(req.params.id);
 
         rh.send(res, dbRes, {
-            message: ServerStrings.GET_USER_BY_ID
+            message: ServerStrings.GET_USER_BY_ID,
+            id: req.params.id
         });
     })
     .put(async (req, res) => {
+        const db = req.services.dbService;
         const rh = req.services.restHelper;
         const user = req.body;
+        const dbRes = await db.updateUser(req.params.id, user);
 
-        if (!req.params.id) {
-            rh.send(res, undefined, {
-                message: ServerStrings.UPDATE_USER_BY_ID
-            }, 400);
-
-        } else {
-            const db = req.services.dbService;
-            const dbRes = await db.updateUser(req.params.id, user);
-
-            rh.send(res, dbRes, {
-                message: ServerStrings.UPDATE_USER_BY_ID
-            });
-        }
+        rh.send(res, dbRes, {
+            message: ServerStrings.UPDATE_USER_BY_ID,
+            id: req.params.id
+        });
     })
     .delete(async (req, res) => {
         const db = req.services.dbService;
@@ -60,7 +54,8 @@ router.route('/:id')
         const dbRes = await db.deleteUser(req.params.id);
 
         rh.send(res, dbRes, {
-            message: ServerStrings.DELETE_USER_BY_ID
+            message: ServerStrings.DELETE_USER_BY_ID,
+            id: req.params.id
         });
     });
 

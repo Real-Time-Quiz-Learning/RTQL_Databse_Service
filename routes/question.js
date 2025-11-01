@@ -1,4 +1,5 @@
 import express from 'express';
+import { ServerStrings } from '../strings.js';
 
 const router = express.Router();
 
@@ -7,77 +8,44 @@ router.use(express.json());
 router.route('/')
     .get(async (req, res) => {
         const db = req.services.dbService;
-        const questions = await db.getQuestion();
+        const rh = req.services.restHelper;
+        const dbRes = await db.getQuestion();
 
-        res.status(200);
-        res.json({
-            message: 'Successfully retrieved all questions',
-            data: questions
+        rh.send(res, dbRes, {
+            message: ServerStrings.GET_ALL_QUESTION
         });
     })
     .post(async (req, res) => {
         const db = req.services.dbService;
-        const newQuestion = req.body;
+        const rh = req.services.restHelper;
+        const question = req.body;
+        const dbRes = await db.addQuestion(question);
 
-        if (!newQuestion.pid || !newQuestion.qtext  || !newQuestion.qtime) {
-            res.status(400);
-            res.json({
-                message: 'Question requires \'pid\', \'qtext\', and \'qtime\' parameters'
-            });
-        } else {
-            const resp = await db.addQuestion(newQuestion);
-
-            res.status(200);
-            res.json({
-                message: 'Successfully added new question',
-                data: resp
-            });
-        }
+        rh.send(res, dbRes, {
+            message: ServerStrings.ADD_NEW_QUESTION
+        });
     });
 
 router.route('/:id')
     .get(async (req, res) => {
         const db = req.services.dbService;
-        const questions = await db.getQuestion(req.params.id);
+        const rh = req.services.restHelper;
+        const dbRes = await db.getQuestion(req.params.id);
 
-        if (!questions || questions.length === 0) {
-            res.status(400);
-            res.json({
-                message: `Could not find quesion for id \'${req.params.id}\'`,
-                id: req.params.id
-            });
-        } else {
-            res.status(200);
-            res.json({
-                message: `Found question for id ${req.params.id}`,
-                id: req.params.id,
-                data: questions
-            });
-        }
+        rh.send(res, dbRes, {
+            message: ServerStrings.GET_QUESTION_BY_ID
+        });
     })
     .put(async (req, res) => {
         const db = req.services.dbService;
+        const rh = req.services.restHelper;
         const question = req.body;
+        const dbRes = await db.updateQuestion(req.params.id, question);
 
-        if (!question) {
-            res.status(400);
-            res.json({
-                message: 'There is no question to update'
-            });
-        } else {
-            console.log(question);
-
-            const resp = await db.updateQuestion(req.params.id, question);
-
-            console.log(resp);
-
-            res.status(200);
-            res.json({
-                message: 'Successfully update question',
-                id: req.params.id,
-                data: resp
-            });
-        }
+        rh.send(res, dbRes, {
+            message: ServerStrings.UPDATE_QUESTION_BY_ID,
+            id: req.params.id
+        })
     });
 
 export default router;
