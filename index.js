@@ -23,11 +23,13 @@ class Server {
     constructor() {
         // App Properties
         this.port = process.env.PORT;
+        this.root = process.cwd();
 
         this.corsOptions    = {
             optionSuccessStatus: 204,
             origin:     '*',
-            methods:    'GET,PUT,POST,PATCH,DELTE,OPTIONS'
+            methods:    'GET,PUT,POST,PATCH,DELTE,OPTIONS',
+            allowedHeaders: [ 'Content-Type', 'Authorization' ]
         };
 
         // Services
@@ -43,23 +45,22 @@ class Server {
         );
         this.restHelper = new RestHelper();
 
-        // Expose services via middleware
-        this.exposedServices = Object.freeze({
+        this.serviceMiddlewareBound     = this.serviceMiddleware.bind(this);
+    }
+
+    serviceMiddleware(req, res, next) {
+        req.services = Object.freeze({
             dbService: this.dbService,
             restHelper: this.restHelper
         });
-        this.exposeServiceMiddleware = this.exposeServices.bind(this);
-    }
-
-    exposeServices(req, res, next) {
-        req.services = this.exposedServices;
         next();
     }
 
     start() {
-        this.app.use(this.exposeServiceMiddleware);
+        this.app.use(cors(this.corsOptions));
+        this.app.use(express.static(`${this.root}/public`));
+        this.app.use(this.serviceMiddlewareBound);
 
-        this.app.use(express.static(`${process.cwd()}/public`));
         this.app.use('/question', QuestionRouter);
         this.app.use('/response', ResponseRouter);
         this.app.use('/user', UserRouter);
