@@ -12,7 +12,7 @@ class DbQueries {
     // del --> delete from {table} where ...
     // come to think of it, if I just made these different classes that would probably be easier
 
-    static SAF_USER = 'select (fname,lname,email) from rtql.user';
+    static SAF_USER = 'select fname, lname, email from rtql.user';
     static INS_USER = 'insert into rtql.user (fname, lname, email, pass) values (:fname, :lname, :email, :pass)';
     static UPD_USER = 'update rtql.user set fname = coalesce(:fname, fname), lname = coalesce(:lname, lname), email = coalesce(:email, email), pass = coalesce(:pass, pass) where id = :id';
     static BID_USER = 'select * from rtql.user where id = :id';
