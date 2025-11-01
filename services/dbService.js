@@ -24,7 +24,7 @@ class DbQueries {
 
     static SAF_QUESTION = 'select * from rtql.question';
     static INS_QUESTION = 'insert into rtql.question (pid, qtext, qtime) values (:pid, :qtext, :qtime)';
-    static UPD_QUESTION = 'update rtql.question set qtext = coalesce(:qtext, qtext)'
+    static UPD_QUESTION = 'update rtql.question set qtext = coalesce(:qtext, qtext) where id = :id';
     static BID_QUESTION = 'select * from rtql.question where id = :id';
 }
 
