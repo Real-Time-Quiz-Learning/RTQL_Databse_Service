@@ -9,7 +9,7 @@ router.route('/')
     .get(async (req, res) => {
         const db    = req.services.dbService;
         const rh    = req.services.restHelper;
-        const dbRes = await db.getUser(); 
+        const dbRes = await db.getUser(null, req.query); 
 
         rh.send(res, dbRes, {
             message: ServerStrings.GET_ALL_USERS

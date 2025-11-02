@@ -12,10 +12,10 @@ class DbQueries {
     // del --> delete from {table} where ...
     // come to think of it, if I just made these different classes that would probably be easier
 
-    static SAF_USER = 'select id, fname, lname, email from rtql.user';
+    static SAF_USER = 'select * from rtql.user';
     static INS_USER = 'insert into rtql.user (fname, lname, email, pass) values (:fname, :lname, :email, :pass)';
     static UPD_USER = 'update rtql.user set fname = coalesce(:fname, fname), lname = coalesce(:lname, lname), email = coalesce(:email, email), pass = coalesce(:pass, pass) where id = :id';
-    static BID_USER = 'select id, fname, lname, email from rtql.user where id = :id';
+    static BID_USER = 'select * from rtql.user where id = :id';
     static DEL_USER = 'delete from rtql.user where id = :id';
 
     static SAF_RESPONSE = 'select * from rtql.response';
@@ -95,6 +95,13 @@ export class DbService {
         });
     }
 
+    // Cool but not necessary right now
+    // queryBuilder(base, conditions, params) {
+    //     if (params.fname) {
+
+    //     }
+    // }
+
     async test() {
         return Promise.resolve('This is a test');
     }
@@ -111,9 +118,40 @@ export class DbService {
 
     // --- User ----------------------------------------
 
-    async getUser(id = null) {
+    async getUser(id = null, params = null) {
         if (!id) {
-            const results = await this.executeQuery(DbQueries.SAF_USER);
+            let base = DbQueries.SAF_USER;
+            const qconditions = []
+            const qparams = {};
+           
+            console.log(params.id);  
+
+            if (params && params.id) {
+                qparams.id = params.id;
+                qconditions.push('id = :id');
+            }
+            if (params && params.fname) {
+                qparams.fname = params.fname; 
+                qconditions.push('fname = :fname');
+            }
+            if (params && params.lname) {
+                qparams.lname = params.lname;
+                qconditions.push('lname = :lname');
+            }
+            if (params && params.email) {
+                qparams.email = params.email;
+                qconditions.push('email = :email');
+            }
+
+            console.log(qparams);
+            console.log(qconditions);
+
+            if (qconditions.length > 0)
+                base += ' where ' + qconditions.join('and');
+
+            console.log(base);
+
+            const results = await this.executeQuery(base, qparams);
             return results;
         } else {
             const results = await this.executeQuery(DbQueries.BID_USER, {
