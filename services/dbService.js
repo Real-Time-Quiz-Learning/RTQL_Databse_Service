@@ -21,7 +21,7 @@ class DbQueries {
     static SAF_RESPONSE = 'select * from rtql.response';
     static INS_RESPONSE = 'insert into rtql.response (qid, rtext, correct) values (:qid, :rtext, :correct)';
     static BID_RESPONSE = 'select * from rtql.response where id = :id';
-    static UPD_RESPONSE = 'update rtql.response set rtext = coalesce(:rtext, rtext), correct = coalesce(:correct, correct) where id = :id';
+    static UPD_RESPONSE = 'update rtql.response set rtext = coalesce(:rtext, rtext), correct = coalesce(:correct, correct), qid = coalesce(:qid, qid) where id = :id';
     static DEL_RESPONSE = 'delete from rtql.response where id = :id';
 
     static SAF_QUESTION = 'select * from rtql.question';
@@ -238,6 +238,7 @@ export class DbService {
             const results = await this.executeQuery(DbQueries.UPD_RESPONSE, {
                 id: id,
                 rtext: newResponse.rtext || null,
+                qid: newResponse.qid || null,
                 correct: newResponse.correct || null
             });
             return results;
