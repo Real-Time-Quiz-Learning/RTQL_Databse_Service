@@ -46,6 +46,17 @@ router.route('/:id')
             message: ServerStrings.UPDATE_QUESTION_BY_ID,
             id: req.params.id
         })
+    })
+    .delete(async (req, res) => {
+        const db = req.services.dbService;
+        const rh = req.services.restHelper;
+        const dbRes = await db.deleteQuestion(req.params.id);
+
+        rh.send(res, dbRes, {
+            message: ServerStrings.DELETE_QUESTION_BY_ID,
+            id: req.params.id
+        })
+        
     });
 
 export default router;

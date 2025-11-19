@@ -36,6 +36,27 @@ router.route('/:id')
             message: ServerStrings.GET_RESPONSE_BY_ID,
             id: req.params.id
         });
+    })
+    .put(async (req, res) => {
+        const db = req.services.dbService; 
+        const rh = req.services.restHelper;
+        const response = req.body;
+        const dbRes = await db.updateResponse(req.params.id, response);
+
+        rh.send(res, dbRes, {
+            message: ServerStrings.UDPATE_RESPONSE_BY_ID,
+            id: req.params.id
+        });
+    })
+    .delete(async (req, res) => {
+        const db = req.services.dbService;
+        const rh = req.services.restHelper;
+        const dbRes = await db.deleteResponse(req.params.id);
+
+        rh.send(res, dbRes, {
+            message: ServerStrings.DELETE_RESPONSE_BY_ID,
+            id: req.params.id
+        });
     });
 
 export default router;

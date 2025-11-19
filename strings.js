@@ -9,8 +9,11 @@ export class ServerStrings {
     static ADD_NEW_QUESTION = 'add a new question request';
     static GET_QUESTION_BY_ID = 'get question by id request';
     static UPDATE_QUESTION_BY_ID = 'update question by id request';
+    static DELETE_QUESTION_BY_ID = 'deleted question';
 
     static GET_ALL_RESPONSE = 'get all response request';
     static ADD_NEW_RESPONSE = 'add a new response request';
     static GET_RESPONSE_BY_ID = 'get a response by id request';
+    static UDPATE_RESPONSE_BY_ID = 'updated question';
+    static DELETE_RESPONSE_BY_ID = 'deleted response';
 }

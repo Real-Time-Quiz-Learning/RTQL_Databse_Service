@@ -21,11 +21,14 @@ class DbQueries {
     static SAF_RESPONSE = 'select * from rtql.response';
     static INS_RESPONSE = 'insert into rtql.response (qid, rtext, correct) values (:qid, :rtext, :correct)';
     static BID_RESPONSE = 'select * from rtql.response where id = :id';
+    static UPD_RESPONSE = 'update rtql.response set rtext = coalesce(:rtext, rtext), correct = coalesce(:correct, correct) where id = :id';
+    static DEL_RESPONSE = 'delete from rtql.response where id = :id';
 
     static SAF_QUESTION = 'select * from rtql.question';
     static INS_QUESTION = 'insert into rtql.question (pid, qtext) values (:pid, :qtext)';
     static UPD_QUESTION = 'update rtql.question set qtext = coalesce(:qtext, qtext) where id = :id';
     static BID_QUESTION = 'select * from rtql.question where id = :id';
+    static DEL_QUESTION = 'delete from rtql.question where id = :id';
 }
 
 export class DbResStatus {
@@ -228,6 +231,30 @@ export class DbService {
         }
     }
 
+    async updateResponse(id, newResponse) {
+        if (!newResponse)
+            return new DbRes(DbResStatus.ERROR, undefined, DbService.DB_NOTHING_UPDATE);
+        else  {
+            const results = await this.executeQuery(DbQueries.UPD_RESPONSE, {
+                id: id,
+                rtext: newResponse.rtext || null,
+                correct: newResponse.correct || null
+            });
+            return results;
+        }
+    }
+
+    async deleteResponse(id) {
+        if (!id)
+            return new DbRes(RbResStatus.ERROR, undefined, DbService.DB_MISSING_ID);
+        else {
+            const results = await this.executeQuery(DbQueries.DEL_RESPONSE, {
+                id: id
+            });
+            return results
+        }
+    }
+
     // --- Question ----------------------------------------
 
     async getQuestion(id = null) {
@@ -256,11 +283,22 @@ export class DbService {
 
     async updateQuestion(id, someQuestion) {
         if (!someQuestion)
-            return new DbRes(DbResStatus.ERROR, undefined, DbService.DB_NOTHING_UPDATE)
+            return new DbRes(DbResStatus.ERROR, undefined, DbService.DB_NOTHING_UPDATE);
         else {
             const results = await this.executeQuery(DbQueries.UPD_QUESTION, {
                 id: id, 
                 qtext: someQuestion.qtext || null
+            });
+            return results;
+        }
+    }
+
+    async deleteQuestion(id) {
+        if (!id)
+            return new DbRes(DbResStatus.ERROR, undefined, DbService.DB_MISSING_ID);
+        else {
+            const results = await this.executeQuery(DbQueries.DEL_QUESTION, {
+                id: id
             });
             return results;
         }
