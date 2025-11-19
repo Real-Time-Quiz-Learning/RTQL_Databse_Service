@@ -19,11 +19,11 @@ class DbQueries {
     static DEL_USER = 'delete from rtql.user where id = :id';
 
     static SAF_RESPONSE = 'select * from rtql.response';
-    static INS_RESPONSE = 'insert into rtql.response (qid, snick, rtext) values (:qid, :snick, :rtext)';
+    static INS_RESPONSE = 'insert into rtql.response (qid, rtext, correct) values (:qid, :rtext, :correct)';
     static BID_RESPONSE = 'select * from rtql.response where id = :id';
 
     static SAF_QUESTION = 'select * from rtql.question';
-    static INS_QUESTION = 'insert into rtql.question (pid, qtext, qtime) values (:pid, :qtext, :qtime)';
+    static INS_QUESTION = 'insert into rtql.question (pid, qtext) values (:pid, :qtext)';
     static UPD_QUESTION = 'update rtql.question set qtext = coalesce(:qtext, qtext) where id = :id';
     static BID_QUESTION = 'select * from rtql.question where id = :id';
 }
@@ -221,7 +221,7 @@ export class DbService {
         else {
             const results = await this.executeQuery(DbQueries.INS_RESPONSE, {
                 qid: newResponse.qid,
-                snick: newResponse.snick,
+                correct: newResponse.correct,
                 rtext: newResponse.rtext 
             });
             return results;
@@ -248,8 +248,7 @@ export class DbService {
         else {
             const results = await this.executeQuery(DbQueries.INS_QUESTION, {
                 pid: newQuestion.pid,
-                qtext: newQuestion.qtext,
-                qtime: newQuestion.qtime
+                qtext: newQuestion.qtext
             });
             return results;
         }

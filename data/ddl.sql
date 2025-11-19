@@ -23,7 +23,6 @@ create table question (
     id          int             not null auto_increment,
     pid         int             not null,
     qtext       varchar(255)    not null,
-    qtime       int             not null,
 
     primary key (id),
     foreign key (pid) references user (id) on delete cascade
@@ -32,8 +31,9 @@ create table question (
 create table response (
     id          int             not null auto_increment,
     qid         int             not null,
-    snick       varchar(50)     not null,
+    -- snick       varchar(50)     not null,
     rtext       varchar(255)    not null,
+    correct     boolean         default false,
 
     primary key (id),
     foreign key (qid)  references question (id) on delete cascade
