@@ -258,9 +258,30 @@ export class DbService {
 
     // --- Question ----------------------------------------
 
-    async getQuestion(id = null) {
+    async getQuestion(id = null, params = null) {
         if (!id) {
-            const results = await this.executeQuery(DbQueries.SAF_QUESTION);
+            let base = DbQueries.SAF_QUESTION;
+            const qconditions = []
+            const qparams = {};
+           
+            if (params && params.qtext) {
+                qparams.qtext = params.qtext; 
+                qconditions.push('qtext = :qtext');
+            }
+            if (params && params.pid) {
+                qparams.pid = params.pid;
+                qconditions.push('pid = :pid');
+            }
+
+            console.log(qparams);
+            console.log(qconditions);
+
+            if (qconditions.length > 0)
+                base += ' where ' + qconditions.join(' and ');
+
+            console.log(base);
+
+            const results = await this.executeQuery(base, params);
             return results;
         } else {
             const results = await this.executeQuery(DbQueries.BID_QUESTION, {
