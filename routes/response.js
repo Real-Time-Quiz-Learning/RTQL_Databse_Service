@@ -9,7 +9,7 @@ router.route('/')
     .get(async (req, res) => {
         const db    = req.services.dbService;
         const rh    = req.services.restHelper;
-        const dbRes = await db.getResponse();
+        const dbRes = await db.getResponse(null, req.query);
 
         rh.send(res, dbRes, {
             message: ServerStrings.GET_ALL_RESPONSE

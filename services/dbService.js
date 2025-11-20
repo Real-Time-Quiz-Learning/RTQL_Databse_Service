@@ -206,9 +206,26 @@ export class DbService {
 
     // --- Response ----------------------------------------
 
-    async getResponse(id = null) {
+    async getResponse(id = null, params = null) {
         if (!id) {
-            const results = await this.executeQuery(DbQueries.SAF_RESPONSE);
+            let base = DbQueries.SAF_RESPONSE;
+            const qconditions = []
+            const qparams = {};
+           
+            if (params && params.qid) {
+                qparams.qid = params.qid; 
+                qconditions.push('qid = :qid');
+            }
+
+            console.log(qparams);
+            console.log(qconditions);
+
+            if (qconditions.length > 0)
+                base += ' where ' + qconditions.join(' and ');
+
+            console.log(base);
+
+            const results = await this.executeQuery(base, params);
             return results;
         } else {
             const results = await this.executeQuery(DbQueries.BID_RESPONSE, {
