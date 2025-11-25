@@ -280,7 +280,11 @@ export class DbService {
             let base = DbQueries.SAF_QUESTION;
             const qconditions = []
             const qparams = {};
-           
+            
+            if (params && params.id) {
+                qparams.id = params.id;
+                qconditions.push('id = :id');
+            }
             if (params && params.qtext) {
                 qparams.qtext = params.qtext; 
                 qconditions.push('qtext = :qtext');
