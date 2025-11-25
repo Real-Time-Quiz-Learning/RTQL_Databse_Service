@@ -150,7 +150,7 @@ export class DbService {
             console.log(qconditions);
 
             if (qconditions.length > 0)
-                base += ' where ' + qconditions.join('and');
+                base += ' where ' + qconditions.join(' and ');
 
             console.log(base);
 
