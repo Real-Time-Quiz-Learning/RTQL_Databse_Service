@@ -216,6 +216,10 @@ export class DbService {
                 qparams.qid = params.qid; 
                 qconditions.push('qid = :qid');
             }
+            if (params && params.id) {
+                qparams.id = params.id;
+                qconditions.push('id = :id');
+            }
 
             console.log(qparams);
             console.log(qconditions);
