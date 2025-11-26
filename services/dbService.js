@@ -256,7 +256,7 @@ export class DbService {
                 id: id,
                 rtext: newResponse.rtext || null,
                 qid: newResponse.qid || null,
-                correct: (newResponse.correct === undefined) || null
+                correct: (newResponse.correct === undefined) ? null : newResponse.correct
             });
             return results;
         }
